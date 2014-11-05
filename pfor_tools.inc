@@ -162,6 +162,7 @@ function do_if_necessary($sources,$outputs){
 	foreach($outputs as $output){
 		// if an output does not exist, return TRUE right away
 		if(!file_exists($output))	return true;
+		if(filesize($output) == 0)	return true;
 		if(file_exists($output)){
 			$mtime=filemtime($output);
 			if($mtime < $oldest_out)	

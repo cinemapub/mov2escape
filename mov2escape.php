@@ -4,15 +4,160 @@ $prog=basename($argv[0],".php");
 $version="0.1";
 $attrib="Peter Forret <p.forret@brighfish.be>";
 $moddate=date("Y-m-d",filemtime($argv[0]));
+$ffmpeg='c:\tools\ffmpeg64\ffmpeg.exe';
+$testsec=10;
+
+$dtemp="temp";
+$dout="output";
 
 if(!isset($argv[1])){
 	// usage
 	trace("$prog $version -- $attrib","INFO");
 	trace("Update: $moddate","INFO");
-	trace("Usage : $prog [INPUT FILE] [OUTPUT FOLDER]","INFO");
+	trace("Usage : $prog [-v] [-t] --input [INPUT FILE]","INFO");
 	trace("        INPUT FILE   : MOV/MP4/M4V file","INFO");
-	trace("        OUTPUT FOLDER: where the 3 output files (L/C/R) should be created","INFO");
+	trace("        -v: verbose","INFO");
+	trace("        -t: test (only $testsec sec of video)","INFO");
+	exit(0);
 }
 
+$opts=getopt("tvV",Array("input:","height:"));
+//print_r($opts);
+// ORIG CONTENT = ORIG prefix
+// COMPLETE ESCAPE 5.95:1 = ESCP prefix
+// ESCAPE LEFT  = CUTL
+// ESCAPE RIGHT = CUTR
+// ESCAPE CENTER = CUTC
+
+if(isset($opts["v"])){
+	$debug=true; // more debugging info
+}
+
+if(isset($opts["V"])){
+	trace("$prog $version -- $attrib","INFO");
+}
+
+$ffparam=Array();
+$ffparam[]="-r 24";
+$maxlen="";
+$prefix="ESC";
+if(isset($opts["t"])){
+	trace("test mode - only $testsec seconds","INFO");
+	$ffparam[]="-t $testsec";  // 1 sec for testing
+	$prefix="TEST";
+}
+
+$arc=2048/858;
+$arl=1920/1080;
+$arr=1920/1080;
+
+$ar=$arc+$arl+$arr;
+
+$escp_h=858;
+
+$cutl_w=round($escp_h * $arl/4)*4;
+$cutr_w=round($escp_h * $arr/4)*4;
+$cutc_w=round($escp_h * $arc/4)*4;
+
+$escp_w=$cutc_w+$cutl_w+$cutr_w;
+
+if(!isset($opts["input"])) {
+	trace("NO INPUT FILE GIVEN","INFO");
+	exit(0);
+}
+
+$input=$opts["input"];
+if(!file_exists($input)){
+	trace("input file [$input] not found","INFO");
+	exit(1);
+}
+
+$ffparam[]="-vf \"scale=$escp_w:-1,crop=$escp_w:$escp_h\"";
+$ffparam[]="-c:v libx264 -preset ultrafast -qp 0";
+$ffparam[]="-b:a 256K";
+
+$ffparams=implode(" ",$ffparam);
+trace("ESCAPE HEIGTH: $escp_h");
+trace("LEFT   SCREEN : $cutl_w * $escp_h");
+trace("CENTER SCREEN : $cutc_w * $escp_h");
+trace("RIGHT  SCREEN : $cutr_w * $escp_h");
+trace("ESCAPE WIDTH : $escp_w");
+
+/// ----------------------------------
+/// ------------------ RESCALE TO ESCAPE SIZE
+/// ----------------------------------
+
+$ftemp="$dtemp\\$prefix.temp.mkv";
+$flog="log/" . basename($ftemp) . ".log";
+if(do_if_necessary($input,$ftemp)){
+	//c:\tools\ffmpeg64\ffmpeg -ss 10 -i %SRCVID% -i %SRCAUD% -r 24 -vf "scale=%WIDTH%:-1,crop=%WIDTH%:%HEIGHT%" -c:v libx264 -preset ultrafast -qp 0 -b:a 256K %TEST% -y %INTERMED%
+	trace("CREATE SUPERSCOPE $ftemp","INFO");
+	cmdline("\"$ffmpeg\" -i \"$input\" $ffparams -y \"$ftemp\" 2> \"$flog\"");
+}
+
+$out_l="$dtemp/$prefix.out_l.mp4";
+$out_r="$dtemp/$prefix.out_r.mp4";
+$out_c="$dtemp/$prefix.out_c.mp4";
+
+/// ----------------------------------
+/// ------------------ CUT IN 3 MOVIES
+/// ----------------------------------
+
+$ffcut="-acodec copy -b:v 100M";
+
+if(do_if_necessary($ftemp,$out_l)){
+	// c:\tools\ffmpeg64\ffmpeg -i %INTERMED% -acodec copy -b:v 100M -vf "crop=%HDW%:%HEIGHT%:0:0,drawtext=%TXTFMT%:text='GoPro_4K'" -y %OUTL%
+	trace("CUT LEFT SCREEN $out_l","INFO");
+	cmdline("\"$ffmpeg\" -i \"$ftemp\" $ffcut -vf \"crop=$cutl_w:$escp_h:0:0,scale=1920:1080\" -y \"$out_l\" 2>> \"$flog\"");
+}
+
+if(do_if_necessary($ftemp,$out_r)){
+	// c:\tools\ffmpeg64\ffmpeg -i %INTERMED% -acodec copy -b:v 100M -vf "crop=%HDW%:%HEIGHT%:0:0,drawtext=%TXTFMT%:text='GoPro_4K'" -y %OUTL%
+	trace("CUT RIGHT SCREEN $out_r","INFO");
+	cmdline("\"$ffmpeg\" -i \"$ftemp\" $ffcut -vf \"crop=$cutl_w:$escp_h:in_w-$cutr_w:0,scale=1920:1080\" -y \"$out_r\" 2>> \"$flog\"");
+}
+
+if(do_if_necessary($ftemp,$out_c)){
+	// c:\tools\ffmpeg64\ffmpeg -i %INTERMED% -acodec copy -b:v 100M -vf "crop=%HDW%:%HEIGHT%:0:0,drawtext=%TXTFMT%:text='GoPro_4K'" -y %OUTL%
+	trace("CUT CENTER SCREEN $out_c","INFO");
+	cmdline("\"$ffmpeg\" -i \"$ftemp\" $ffcut -vf \"crop=$cutl_w:$escp_h:$cutl_w:0\" -y \"$out_c\" 2>> \"$flog\"");
+}
+
+/// ----------------------------------
+/// ------------------ RENDER FRAMES
+/// ----------------------------------
+
+
+render_frames($out_l,"$dout\\dpx_l","dpx");
+render_frames($out_c,"$dout\\dpx_c","png");
+render_frames($out_r,"$dout\\dpx_r","dpx");
+
+function render_frames($mov,$folder,$type="dpx"){
+	$flog="log\\frames." . basename($mov). ".log";
+	global $ffmpeg;
+	if(!file_exists("$folder\\.")){
+		trace("Create folder [$folder]");
+		mkdir($folder);
+	}
+	switch($type){
+	case "png":
+		$ffparam="-q:v 1";
+		$ffimg="img%06d.png";
+		break;;
+	case "dpx":
+		$ffparam="-q:v 1";
+		$ffimg="img%06d.dpx";
+		break;;
+	default:
+		$ffparam="-q:v 1";
+		$ffimg="img%06d.png";
+	}
+
+	$first="$folder\\".sprintf($ffimg,1);
+	if(do_if_necessary($mov,$first)){
+		trace("RENDER FRAMES FOR $mov [$type]","INFO");
+		cmdline("\"$ffmpeg\" -i \"$mov\" $ffparam -y \"$folder\\$ffimg\" 2>> \"$flog\"");	
+	}
+}
 
 ?>
