@@ -6,7 +6,7 @@ $attrib="Peter Forret <p.forret@brighfish.be>";
 $moddate=date("Y-m-d",filemtime($argv[0]));
 $ffmpeg='c:\tools\ffmpeg64\ffmpeg.exe';
 $magick='c:\program files\graphicsmagick-1.3.20-q16\gm.exe';
-$testsec=10;
+$testsec=20;
 
 $dtemp="temp";
 $dout="output";
@@ -41,12 +41,6 @@ if(isset($opts["V"])){
 $ffparam=Array();
 $ffparam[]="-r 24";
 $maxlen="";
-$prefix="ESC";
-if(isset($opts["t"])){
-	trace("test mode - only $testsec seconds","INFO");
-	$ffparam[]="-ss 30 -t $testsec";  // 1 sec for testing
-	$prefix="TEST$testsec";
-}
 
 $arc=2048/858;
 $arl=1920/1080;
@@ -54,7 +48,7 @@ $arr=1920/1080;
 
 $ar=$arc+$arl+$arr;
 
-$escp_h=858;
+$escp_h=1080;
 
 $cutl_w=round($escp_h * $arl/4)*4;
 $cutr_w=round($escp_h * $arr/4)*4;
@@ -67,18 +61,21 @@ if(!isset($opts["input"])) {
 	exit(0);
 }
 
+$prefix=substr(basename($input),0,8);
+
+if(isset($opts["t"])){
+	trace("test mode - only $testsec seconds","INFO");
+	$ffparam[]="-ss 30 -t $testsec";  // 1 sec for testing
+	$prefix="test.${testsec}s";
+}
+$prefix.=".$escp_h";
+
 $input=$opts["input"];
 if(!file_exists($input)){
 	trace("input file [$input] not found","INFO");
 	exit(1);
 }
 
-$ffparam[]="-vf \"scale=$escp_w:-1,crop=$escp_w:$escp_h\"";
-//$ffparam[]="-c:v libx264 -preset ultrafast -qp 0";
-$ffparam[]="-b:v 150M -q:v 1";
-$ffparam[]="-acodec copy";
-
-$ffparams=implode(" ",$ffparam);
 trace("ESCAPE HEIGTH: $escp_h");
 trace("LEFT   SCREEN : $cutl_w * $escp_h");
 trace("CENTER SCREEN : $cutc_w * $escp_h");
@@ -88,6 +85,11 @@ trace("ESCAPE WIDTH  : $escp_w");
 /// ----------------------------------
 /// ------------------ RESCALE TO ESCAPE SIZE
 /// ----------------------------------
+$ffparam[]="-vf \"scale=$escp_w:-1,crop=$escp_w:$escp_h\""; // rescale
+$ffparam[]="-c:v libx264 -preset ultrafast -qp 0"; // losless compression
+$ffparam[]="-c:a copy";
+$ffparams=implode(" ",$ffparam);
+
 
 $ftemp="$dtemp\\$prefix.full595.m4v";
 $flog="log/" . basename($ftemp) . ".log";
@@ -105,7 +107,7 @@ $out_c="$dtemp/$prefix.out_c.mp4";
 /// ------------------ CUT IN 3 MOVIES
 /// ----------------------------------
 
-$ffcut="-acodec copy -b:v 100M";
+$ffcut="-acodec copy -c:v libx264 -preset ultrafast -qp 0";
 
 if(do_if_necessary($ftemp,$out_l)){
 	// c:\tools\ffmpeg64\ffmpeg -i %INTERMED% -acodec copy -b:v 100M -vf "crop=%HDW%:%HEIGHT%:0:0,drawtext=%TXTFMT%:text='GoPro_4K'" -y %OUTL%
@@ -122,27 +124,32 @@ if(do_if_necessary($ftemp,$out_r)){
 if(do_if_necessary($ftemp,$out_c)){
 	// c:\tools\ffmpeg64\ffmpeg -i %INTERMED% -acodec copy -b:v 100M -vf "crop=%HDW%:%HEIGHT%:0:0,drawtext=%TXTFMT%:text='GoPro_4K'" -y %OUTL%
 	trace("CUT CENTER SCREEN $out_c","INFO");
-	cmdline("\"$ffmpeg\" -i \"$ftemp\" $ffcut -vf \"crop=$cutl_w:$escp_h:$cutl_w:0\" -y \"$out_c\" 2>> \"$flog\"");
+	cmdline("\"$ffmpeg\" -i \"$ftemp\" $ffcut -vf \"crop=$cutl_w:$escp_h:$cutl_w:0,scale=2048:858\" -y \"$out_c\" 2>> \"$flog\"");
 }
 
 /// ----------------------------------
 /// ------------------ RENDER FRAMES
 /// ----------------------------------
 
+$d_L1="$dout\\$prefix.L";
+$d_L2="$dout\\$prefix.L.dpx";
+$d_R1="$dout\\$prefix.R";
+$d_R2="$dout\\$prefix.R.dpx";
+$d_C="$dout\\$prefix.C";
 
-render_frames($out_l,"$dout\\jpg_l","jpg");
-render_frames($out_c,"$dout\\dcp_c","png");
-render_frames($out_r,"$dout\\jpg_r","jpg");
+render_frames($out_l,$d_L1,"jpg");
+render_frames($out_c,$d_C,"png");
+render_frames($out_r,$d_R1,"jpg");
 
-convert_dpx("$dout\\jpg_l","$dout\\dpx_l");
-convert_dpx("$dout\\jpg_r","$dout\\dpx_r");
-
-
+exit(0);
+convert_dpx($d_L1,$d_L2);
+convert_dpx($d_R1,$d_R2);
 
 
 function render_frames($mov,$folder,$type="dpx"){
 	$flog="log\\frames." . basename($mov). ".log";
 	global $ffmpeg;
+	$bname=basename($folder);
 	if(!file_exists("$folder\\.")){
 		trace("Create folder [$folder]");
 		mkdir($folder);
@@ -150,19 +157,23 @@ function render_frames($mov,$folder,$type="dpx"){
 	switch($type){
 	case "png":
 		$ffparam="-q:v 1";
-		$ffimg="img%06d.png";
+		$ffimg="$bname.%06d.png";
+		break;;
+	case "tif":
+		$ffparam="-q:v 1";
+		$ffimg="$bname.%06d.tif";
 		break;;
 	case "jpg":
 		$ffparam="-q:v 1";
-		$ffimg="img%06d.jpg";
+		$ffimg="$bname.%06d.jpg";
 		break;;
 	case "dpx":
 		$ffparam="-pix_fmt yuv444p10be -q:v 1";
-		$ffimg="img%06d.dpx";
+		$ffimg="$bname.%06d.dpx";
 		break;;
 	default:
 		$ffparam="-q:v 1";
-		$ffimg="img%06d.png";
+		$ffimg="$bname.%06d.png";
 	}
 
 	$first="$folder\\".sprintf($ffimg,1);
