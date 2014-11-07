@@ -2,8 +2,10 @@
 include_once("pfor_tools.inc");
 $prog=basename($argv[0],".php");
 $version="0.1";
-$attrib="Peter Forret <p.forret@brighfish.be>";
+$attrib="Peter Forret <p.forret@brightfish.be>";
 $moddate=date("Y-m-d",filemtime($argv[0]));
+
+// only works for Windows now
 $ffmpeg='c:\tools\ffmpeg64\ffmpeg.exe';
 $magick='c:\program files\graphicsmagick-1.3.20-q16\gm.exe';
 $testsec=20;
@@ -85,13 +87,13 @@ trace("ESCAPE WIDTH  : $escp_w");
 /// ----------------------------------
 /// ------------------ RESCALE TO ESCAPE SIZE
 /// ----------------------------------
-$ffparam[]="-vf \"scale=$escp_w:-1,crop=$escp_w:$escp_h\""; // rescale
-$ffparam[]="-c:v libx264 -preset ultrafast -qp 0"; // losless compression
+$ffparam[]="-vf \"scale=$escp_w:-1,crop=$escp_w:$escp_h\""; 	// rescale to full escape width / crop center
+$ffparam[]="-c:v libx264 -preset veryfast -qp 0"; 				// lossless compression
 $ffparam[]="-c:a copy";
 $ffparams=implode(" ",$ffparam);
 
 
-$ftemp="$dtemp\\$prefix.full595.m4v";
+$ftemp="$dtemp\\$prefix.full595.avi";
 $flog="log/" . basename($ftemp) . ".log";
 if(do_if_necessary($input,$ftemp)){
 	//c:\tools\ffmpeg64\ffmpeg -ss 10 -i %SRCVID% -i %SRCAUD% -r 24 -vf "scale=%WIDTH%:-1,crop=%WIDTH%:%HEIGHT%" -c:v libx264 -preset ultrafast -qp 0 -b:a 256K %TEST% -y %INTERMED%
@@ -108,23 +110,24 @@ $out_c="$dtemp/$prefix.out_c.mp4";
 /// ----------------------------------
 
 $ffcut="-acodec copy -c:v libx264 -preset ultrafast -qp 0";
+//$ffcut="-acodec copy -vcodec copy";
 
 if(do_if_necessary($ftemp,$out_l)){
 	// c:\tools\ffmpeg64\ffmpeg -i %INTERMED% -acodec copy -b:v 100M -vf "crop=%HDW%:%HEIGHT%:0:0,drawtext=%TXTFMT%:text='GoPro_4K'" -y %OUTL%
 	trace("CUT LEFT SCREEN $out_l","INFO");
-	cmdline("\"$ffmpeg\" -i \"$ftemp\" $ffcut -vf \"crop=$cutl_w:$escp_h:0:0,scale=1920:1080\" -y \"$out_l\" 2>> \"$flog\"");
+	cmdline("\"$ffmpeg\" -i \"$ftemp\" $ffcut -vf \"crop=$cutl_w:$escp_h:0:0,scale=1920:1080\" -y \"$out_l\" 2> \"$flog\"");
 }
 
 if(do_if_necessary($ftemp,$out_r)){
 	// c:\tools\ffmpeg64\ffmpeg -i %INTERMED% -acodec copy -b:v 100M -vf "crop=%HDW%:%HEIGHT%:0:0,drawtext=%TXTFMT%:text='GoPro_4K'" -y %OUTL%
 	trace("CUT RIGHT SCREEN $out_r","INFO");
-	cmdline("\"$ffmpeg\" -i \"$ftemp\" $ffcut -vf \"crop=$cutl_w:$escp_h:in_w-$cutr_w:0,scale=1920:1080\" -y \"$out_r\" 2>> \"$flog\"");
+	cmdline("\"$ffmpeg\" -i \"$ftemp\" $ffcut -vf \"crop=$cutl_w:$escp_h:in_w-$cutr_w:0,scale=1920:1080\" -y \"$out_r\" 2> \"$flog\"");
 }
 
 if(do_if_necessary($ftemp,$out_c)){
 	// c:\tools\ffmpeg64\ffmpeg -i %INTERMED% -acodec copy -b:v 100M -vf "crop=%HDW%:%HEIGHT%:0:0,drawtext=%TXTFMT%:text='GoPro_4K'" -y %OUTL%
 	trace("CUT CENTER SCREEN $out_c","INFO");
-	cmdline("\"$ffmpeg\" -i \"$ftemp\" $ffcut -vf \"crop=$cutl_w:$escp_h:$cutl_w:0,scale=2048:858\" -y \"$out_c\" 2>> \"$flog\"");
+	cmdline("\"$ffmpeg\" -i \"$ftemp\" $ffcut -vf \"crop=$cutl_w:$escp_h:$cutl_w:0,scale=2048:858\" -y \"$out_c\" 2> \"$flog\"");
 }
 
 /// ----------------------------------
