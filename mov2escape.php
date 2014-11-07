@@ -5,6 +5,7 @@ $version="0.1";
 $attrib="Peter Forret <p.forret@brighfish.be>";
 $moddate=date("Y-m-d",filemtime($argv[0]));
 $ffmpeg='c:\tools\ffmpeg64\ffmpeg.exe';
+$magick='c:\program files\graphicsmagick-1.3.20-q16\gm.exe';
 $testsec=10;
 
 $dtemp="temp";
@@ -43,8 +44,8 @@ $maxlen="";
 $prefix="ESC";
 if(isset($opts["t"])){
 	trace("test mode - only $testsec seconds","INFO");
-	$ffparam[]="-t $testsec";  // 1 sec for testing
-	$prefix="TEST";
+	$ffparam[]="-ss 30 -t $testsec";  // 1 sec for testing
+	$prefix="TEST$testsec";
 }
 
 $arc=2048/858;
@@ -73,25 +74,26 @@ if(!file_exists($input)){
 }
 
 $ffparam[]="-vf \"scale=$escp_w:-1,crop=$escp_w:$escp_h\"";
-$ffparam[]="-c:v libx264 -preset ultrafast -qp 0";
-$ffparam[]="-b:a 256K";
+//$ffparam[]="-c:v libx264 -preset ultrafast -qp 0";
+$ffparam[]="-b:v 150M -q:v 1";
+$ffparam[]="-acodec copy";
 
 $ffparams=implode(" ",$ffparam);
 trace("ESCAPE HEIGTH: $escp_h");
 trace("LEFT   SCREEN : $cutl_w * $escp_h");
 trace("CENTER SCREEN : $cutc_w * $escp_h");
 trace("RIGHT  SCREEN : $cutr_w * $escp_h");
-trace("ESCAPE WIDTH : $escp_w");
+trace("ESCAPE WIDTH  : $escp_w");
 
 /// ----------------------------------
 /// ------------------ RESCALE TO ESCAPE SIZE
 /// ----------------------------------
 
-$ftemp="$dtemp\\$prefix.temp.mkv";
+$ftemp="$dtemp\\$prefix.full595.m4v";
 $flog="log/" . basename($ftemp) . ".log";
 if(do_if_necessary($input,$ftemp)){
 	//c:\tools\ffmpeg64\ffmpeg -ss 10 -i %SRCVID% -i %SRCAUD% -r 24 -vf "scale=%WIDTH%:-1,crop=%WIDTH%:%HEIGHT%" -c:v libx264 -preset ultrafast -qp 0 -b:a 256K %TEST% -y %INTERMED%
-	trace("CREATE SUPERSCOPE $ftemp","INFO");
+	trace("SUPERSCOPE:    $ftemp","INFO");
 	cmdline("\"$ffmpeg\" -i \"$input\" $ffparams -y \"$ftemp\" 2> \"$flog\"");
 }
 
@@ -128,9 +130,15 @@ if(do_if_necessary($ftemp,$out_c)){
 /// ----------------------------------
 
 
-render_frames($out_l,"$dout\\dpx_l","dpx");
-render_frames($out_c,"$dout\\dpx_c","png");
-render_frames($out_r,"$dout\\dpx_r","dpx");
+render_frames($out_l,"$dout\\jpg_l","jpg");
+render_frames($out_c,"$dout\\dcp_c","png");
+render_frames($out_r,"$dout\\jpg_r","jpg");
+
+convert_dpx("$dout\\jpg_l","$dout\\dpx_l");
+convert_dpx("$dout\\jpg_r","$dout\\dpx_r");
+
+
+
 
 function render_frames($mov,$folder,$type="dpx"){
 	$flog="log\\frames." . basename($mov). ".log";
@@ -144,8 +152,12 @@ function render_frames($mov,$folder,$type="dpx"){
 		$ffparam="-q:v 1";
 		$ffimg="img%06d.png";
 		break;;
-	case "dpx":
+	case "jpg":
 		$ffparam="-q:v 1";
+		$ffimg="img%06d.jpg";
+		break;;
+	case "dpx":
+		$ffparam="-pix_fmt yuv444p10be -q:v 1";
 		$ffimg="img%06d.dpx";
 		break;;
 	default:
@@ -158,6 +170,29 @@ function render_frames($mov,$folder,$type="dpx"){
 		trace("RENDER FRAMES FOR $mov [$type]","INFO");
 		cmdline("\"$ffmpeg\" -i \"$mov\" $ffparam -y \"$folder\\$ffimg\" 2>> \"$flog\"");	
 	}
+}
+
+function convert_dpx($folderin,$folderout){
+	$flog="log\\cnvdpx." . basename($folderin). ".log";
+	global $ffmpeg;
+	global $magick;
+
+	if(!file_exists("$folderout\\.")){
+		trace("Create folder [$folderout]");
+		mkdir($folderout);
+	}
+
+	$filesin=listfiles($folderin);
+	trace("");
+		trace("CONVERT 2 DPX FOR $mov [" . basename($folderin) . "]","INFO");
+	foreach($filesin as $srcfile){
+		$dstfile=basename($srcfile);
+		$dstfile="$folderout/".str_replace(Array(".jpg",".tif",".dpx"),"",$dstfile).".dpx";
+		if(do_if_necessary($srcfile,$dstfile)){
+			cmdline("\"$magick\" convert \"$srcfile\" -colorspace CineonLog -endian msb -set display-gamma 2.2 -depth 10 \"$dstfile\" ");			
+		}
+	}
+
 }
 
 ?>
