@@ -64,12 +64,13 @@ if(!isset($opts["input"])) {
 }
 $input=$opts["input"];
 
-$prefix=substr(pathinfo($input,PATHINFO_FILENAME),0,8);
+$prefix=substr(pathinfo($input,PATHINFO_FILENAME),0,8);		// make +- sure name refers to input file - easier to distinguish
+$prefix.="." . substr(md5($input),0,4); 					// make +- sure it's unique based on input file
 
 if(isset($opts["t"])){
 	trace("test mode - only $testsec seconds","INFO");
 	$ffparam[]="-ss 30 -t $testsec";  // 1 sec for testing
-	$prefix="test.${testsec}s";
+	$prefix="test.${testsec}s.$prefix";
 }
 $prefix.=".$escp_h";
 
