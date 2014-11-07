@@ -62,8 +62,9 @@ if(!isset($opts["input"])) {
 	trace("NO INPUT FILE GIVEN","INFO");
 	exit(0);
 }
+$input=$opts["input"];
 
-$prefix=substr(basename($input),0,8);
+$prefix=substr(pathinfo($input,PATHINFO_FILENAME),0,8);
 
 if(isset($opts["t"])){
 	trace("test mode - only $testsec seconds","INFO");
@@ -72,7 +73,6 @@ if(isset($opts["t"])){
 }
 $prefix.=".$escp_h";
 
-$input=$opts["input"];
 if(!file_exists($input)){
 	trace("input file [$input] not found","INFO");
 	exit(1);
@@ -88,17 +88,16 @@ trace("ESCAPE WIDTH  : $escp_w");
 /// ------------------ RESCALE TO ESCAPE SIZE
 /// ----------------------------------
 $ffparam[]="-vf \"scale=$escp_w:-1,crop=$escp_w:$escp_h\""; 	// rescale to full escape width / crop center
-$ffparam[]="-c:v libx264 -preset veryfast -qp 0"; 				// lossless compression
+$ffparam[]="-c:v libx264 -preset ultrafast -crf 18"; 			// lossless compression
 $ffparam[]="-c:a copy";
 $ffparams=implode(" ",$ffparam);
-trace("FFMPEG: $ffparams");
 
 
 $ftemp="$dtemp\\$prefix.sscope.mp4";
 $flog="log/" . basename($ftemp) . ".log";
 if(do_if_necessary($input,$ftemp)){
-	//c:\tools\ffmpeg64\ffmpeg -ss 10 -i %SRCVID% -i %SRCAUD% -r 24 -vf "scale=%WIDTH%:-1,crop=%WIDTH%:%HEIGHT%" -c:v libx264 -preset ultrafast -qp 0 -b:a 256K %TEST% -y %INTERMED%
 	trace("SUPERSCOPE:    $ftemp","INFO");
+	trace("FFMPEG: $ffparams");
 	cmdline("\"$ffmpeg\" -i \"$input\" $ffparams -y \"$ftemp\" 2> \"$flog\"");
 }
 
@@ -111,22 +110,18 @@ $out_c="$dtemp/$prefix.out_c.mp4";
 /// ----------------------------------
 
 $ffcut="-acodec copy -c:v libx264 -preset ultrafast -qp 0";
-//$ffcut="-acodec copy -vcodec copy";
 
 if(do_if_necessary($ftemp,$out_l)){
-	// c:\tools\ffmpeg64\ffmpeg -i %INTERMED% -acodec copy -b:v 100M -vf "crop=%HDW%:%HEIGHT%:0:0,drawtext=%TXTFMT%:text='GoPro_4K'" -y %OUTL%
 	trace("CUT LEFT SCREEN $out_l","INFO");
 	cmdline("\"$ffmpeg\" -i \"$ftemp\" $ffcut -vf \"crop=$cutl_w:$escp_h:0:0,scale=1920:1080\" -y \"$out_l\" 2> \"$flog\"");
 }
 
 if(do_if_necessary($ftemp,$out_r)){
-	// c:\tools\ffmpeg64\ffmpeg -i %INTERMED% -acodec copy -b:v 100M -vf "crop=%HDW%:%HEIGHT%:0:0,drawtext=%TXTFMT%:text='GoPro_4K'" -y %OUTL%
 	trace("CUT RIGHT SCREEN $out_r","INFO");
 	cmdline("\"$ffmpeg\" -i \"$ftemp\" $ffcut -vf \"crop=$cutl_w:$escp_h:in_w-$cutr_w:0,scale=1920:1080\" -y \"$out_r\" 2> \"$flog\"");
 }
 
 if(do_if_necessary($ftemp,$out_c)){
-	// c:\tools\ffmpeg64\ffmpeg -i %INTERMED% -acodec copy -b:v 100M -vf "crop=%HDW%:%HEIGHT%:0:0,drawtext=%TXTFMT%:text='GoPro_4K'" -y %OUTL%
 	trace("CUT CENTER SCREEN $out_c","INFO");
 	cmdline("\"$ffmpeg\" -i \"$ftemp\" $ffcut -vf \"crop=$cutl_w:$escp_h:$cutl_w:0,scale=2048:858\" -y \"$out_c\" 2> \"$flog\"");
 }
@@ -141,11 +136,10 @@ $d_R1="$dout\\$prefix.R";
 $d_R2="$dout\\$prefix.R.dpx";
 $d_C="$dout\\$prefix.C";
 
-render_frames($out_l,$d_L1,"jpg");
-render_frames($out_c,$d_C,"png");
-render_frames($out_r,$d_R1,"jpg");
+render_frames($out_l,$d_L1,"tif");
+render_frames($out_c,$d_C,"tif");
+render_frames($out_r,$d_R1,"tif");
 
-exit(0);
 convert_dpx($d_L1,$d_L2);
 convert_dpx($d_R1,$d_R2);
 
