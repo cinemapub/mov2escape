@@ -91,9 +91,10 @@ $ffparam[]="-vf \"scale=$escp_w:-1,crop=$escp_w:$escp_h\""; 	// rescale to full 
 $ffparam[]="-c:v libx264 -preset veryfast -qp 0"; 				// lossless compression
 $ffparam[]="-c:a copy";
 $ffparams=implode(" ",$ffparam);
+trace("FFMPEG: $ffparams");
 
 
-$ftemp="$dtemp\\$prefix.full595.avi";
+$ftemp="$dtemp\\$prefix.sscope.mp4";
 $flog="log/" . basename($ftemp) . ".log";
 if(do_if_necessary($input,$ftemp)){
 	//c:\tools\ffmpeg64\ffmpeg -ss 10 -i %SRCVID% -i %SRCAUD% -r 24 -vf "scale=%WIDTH%:-1,crop=%WIDTH%:%HEIGHT%" -c:v libx264 -preset ultrafast -qp 0 -b:a 256K %TEST% -y %INTERMED%
