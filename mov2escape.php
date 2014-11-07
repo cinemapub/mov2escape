@@ -88,6 +88,7 @@ trace("ESCAPE WIDTH  : $escp_w");
 /// ----------------------------------
 /// ------------------ RESCALE TO ESCAPE SIZE
 /// ----------------------------------
+// based on https://trac.ffmpeg.org/wiki/Encode/H.264
 $ffparam[]="-vf \"scale=$escp_w:-1,crop=$escp_w:$escp_h\""; 	// rescale to full escape width / crop center
 $ffparam[]="-c:v libx264 -preset ultrafast -crf 18"; 			// lossless compression
 $ffparam[]="-c:a copy";
@@ -110,7 +111,7 @@ $out_c="$dtemp/$prefix.out_c.mp4";
 /// ------------------ CUT IN 3 MOVIES
 /// ----------------------------------
 
-$ffcut="-acodec copy -c:v libx264 -preset ultrafast -qp 0";
+$ffcut="-acodec copy -c:v libx264 -preset ultrafast -crf 18";
 
 if(do_if_necessary($ftemp,$out_l)){
 	trace("CUT LEFT SCREEN $out_l","INFO");
