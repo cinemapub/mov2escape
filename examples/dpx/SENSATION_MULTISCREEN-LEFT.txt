@@ -1,0 +1,112 @@
+Image: SENSATION MULTISCREEN - 23.976 - LEFT_01500.dpx
+  Format: DPX (SMPTE 268M-2003 (DPX 2.0))
+  Class: DirectClass
+  Geometry: 1920x1080+0+0
+  Units: Undefined
+  Type: TrueColor
+  Base type: TrueColor
+  Endianess: MSB
+  Colorspace: RGB
+  Depth: 10-bit
+  Channel depth:
+    red: 10-bit
+    green: 10-bit
+    blue: 10-bit
+  Channel statistics:
+    Red:
+      min: 0 (0)
+      max: 1024 (1)
+      mean: 44.6239 (0.0435787)
+      standard deviation: 110.643 (0.108052)
+      kurtosis: 57.3114
+      skewness: 7.30998
+    Green:
+      min: 0 (0)
+      max: 1024 (1)
+      mean: 29.7327 (0.0290363)
+      standard deviation: 99.476 (0.097146)
+      kurtosis: 79.3576
+      skewness: 8.7807
+    Blue:
+      min: 0 (0)
+      max: 1024 (1)
+      mean: 28.4768 (0.0278098)
+      standard deviation: 88.3687 (0.0862988)
+      kurtosis: 90.5592
+      skewness: 9.20619
+  Image statistics:
+    Overall:
+      min: 0 (0)
+      max: 1024 (1)
+      mean: 34.2778 (0.0334749)
+      standard deviation: 99.9107 (0.0975705)
+      kurtosis: 73.6878
+      skewness: 8.35823
+  Rendering intent: Undefined
+  Gamma: 1
+  Background color: rgb(255,255,255)
+  Border color: rgb(223,223,223)
+  Matte color: rgb(189,189,189)
+  Transparent color: rgb(0,0,0)
+  Interlace: None
+  Intensity: Undefined
+  Compose: Over
+  Page geometry: 1920x1080+0+0
+  Dispose: Undefined
+  Iterations: 0
+  Compression: Undefined
+  Orientation: TopLeft
+  Properties:
+    date:create: 2014-11-10T13:42:23+01:00
+    date:modify: 2014-11-10T13:42:23+01:00
+    document: SENSATION MULTISCREEN - 23.976 - LEFT_01500.dpx
+    dpx:file.creator: Adobe After Effects Cineon Format
+    dpx:file.ditto.key: 1
+    dpx:file.filename: SENSATION MULTISCREEN - 23.976 - LEFT_01500.dpx
+    dpx:file.timestamp: 2014:03:04:18:28:54:+01
+    dpx:file.version: V1.0
+    dpx:film.count: ÿÿÿÿ
+    dpx:film.frame_rate: 1.#INF
+    dpx:film.offset: ÿÿ
+    dpx:film.prefix: ÿÿÿÿÿÿ
+    dpx:film.shutter_angle: 1.#INF
+    dpx:film.type: ÿÿ
+    dpx:image.element[0].transfer-characteristic: UserDefined
+    dpx:image.element[1].transfer-characteristic: Reserved
+    dpx:image.element[2].transfer-characteristic: Reserved
+    dpx:image.element[3].transfer-characteristic: Reserved
+    dpx:image.element[4].transfer-characteristic: Reserved
+    dpx:image.element[5].transfer-characteristic: Reserved
+    dpx:image.element[6].transfer-characteristic: Reserved
+    dpx:image.element[7].transfer-characteristic: Reserved
+    dpx:image.orientation: 0
+    dpx:orientation.filename: SENSATION MULTISCREEN - 23.976 - LEFT_01500.dpx
+    dpx:orientation.x_center: -1.#QNAN
+    dpx:orientation.y_center: -1.#QNAN
+    dpx:television.black_gain: 1.#INF
+    dpx:television.black_level: 1.#INF
+    dpx:television.break_point: 1.#INF
+    dpx:television.field_number: 255
+    dpx:television.frame_rate: 23.976
+    dpx:television.gamma: 1.#INF
+    dpx:television.horizontal_sample_rate: 1.#INF
+    dpx:television.integration_times: 1.#INF
+    dpx:television.interlace: 255
+    dpx:television.time.code: 00:01:02:12
+    dpx:television.time_offset: 1.#INF
+    dpx:television.user.bits: ff:ff:ff:ff
+    dpx:television.vertical_sample_rate: 1.#INF
+    dpx:television.video_signal: 255
+    dpx:television.white_level: 1.#INF
+    signature: cc5d4bd3d88cbec73a8e673c82f410c9cc3942966b25a462d8a0f0c31d277fd9
+    software: Adobe After Effects Cineon Format
+  Artifacts:
+    filename: SENSATION MULTISCREEN - 23.976 - LEFT_01500.dpx
+    verbose: true
+  Tainted: False
+  Filesize: 8.296MB
+  Number pixels: 2.074M
+  Pixels per second: 19.02MB
+  User time: 0.109u
+  Elapsed time: 0:01.109
+  Version: ImageMagick 6.8.8-0 Q16 x64 2013-12-21 http://www.imagemagick.org

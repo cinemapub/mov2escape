@@ -1,0 +1,125 @@
+Image: DD_TRAILER_SCREEN_23_98_LEFT_grd001.00200.dpx
+  Format: DPX (SMPTE 268M-2003 (DPX 2.0))
+  Class: DirectClass
+  Geometry: 1920x1080+0+0
+  Units: Undefined
+  Type: TrueColor
+  Base type: TrueColor
+  Endianess: MSB
+  Colorspace: Log
+  Depth: 10-bit
+  Channel depth:
+    red: 10-bit
+    green: 10-bit
+    blue: 10-bit
+  Channel statistics:
+    Red:
+      min: 41 (0.0400855)
+      max: 1023 (0.999023)
+      mean: 350.902 (0.342683)
+      standard deviation: 323.278 (0.315706)
+      kurtosis: -0.0786267
+      skewness: 1.13595
+    Green:
+      min: 41 (0.0400855)
+      max: 957 (0.934508)
+      mean: 313.255 (0.305917)
+      standard deviation: 288.847 (0.282081)
+      kurtosis: 0.100739
+      skewness: 1.20193
+    Blue:
+      min: 35 (0.0342107)
+      max: 809 (0.789837)
+      mean: 237.777 (0.232207)
+      standard deviation: 228.952 (0.22359)
+      kurtosis: 0.787716
+      skewness: 1.45882
+  Image statistics:
+    Overall:
+      min: 35 (0.0342107)
+      max: 1023 (0.999023)
+      mean: 300.644 (0.293603)
+      standard deviation: 283.055 (0.276425)
+      kurtosis: 0.718068
+      skewness: 1.37811
+  Rendering intent: Perceptual
+  Gamma: 0.454545
+  Chromaticity:
+    red primary: (0.64,0.33)
+    green primary: (0.3,0.6)
+    blue primary: (0.15,0.06)
+    white point: (0.3127,0.329)
+  Background color: log(255,255,255)
+  Border color: log(223,223,223)
+  Matte color: log(189,189,189)
+  Transparent color: log(0,0,0)
+  Interlace: None
+  Intensity: Undefined
+  Compose: Over
+  Page geometry: 1920x1080+0+0
+  Dispose: Undefined
+  Iterations: 0
+  Compression: Undefined
+  Orientation: TopLeft
+  Properties:
+    date:create: 2014-11-10T13:42:21+01:00
+    date:modify: 2014-11-10T13:42:21+01:00
+    document: /san43/barco_di_devils_process/left/DD_TRAILER_SCREEN_23_98_LEFT_grd001/1920x1080/DD_TRAILER_SCREEN
+    dpx:file.creator: Shake
+    dpx:file.ditto.key: 1
+    dpx:file.filename: /san43/barco_di_devils_process/left/DD_TRAILER_SCREEN_23_98_LEFT_grd001/1920x1080/DD_TRAILER_SCREEN
+    dpx:file.timestamp: 2014:09:10:11:59:41:PDT
+    dpx:file.version: V1.0
+    dpx:film.count: ÿÿÿÿ
+    dpx:film.frame_rate: 1.#INF
+    dpx:film.offset: ÿÿ
+    dpx:film.prefix: ÿÿÿÿÿÿ
+    dpx:film.shutter_angle: 1.#INF
+    dpx:film.type: ÿÿ
+    dpx:image.element[0].transfer-characteristic: PrintingDensity
+    dpx:image.element[1].transfer-characteristic: Reserved
+    dpx:image.element[2].transfer-characteristic: Reserved
+    dpx:image.element[3].transfer-characteristic: Reserved
+    dpx:image.element[4].transfer-characteristic: Reserved
+    dpx:image.element[5].transfer-characteristic: Reserved
+    dpx:image.element[6].transfer-characteristic: Reserved
+    dpx:image.element[7].transfer-characteristic: Reserved
+    dpx:image.orientation: 0
+    dpx:orientation.aspect_ratio: 1000x1000
+    dpx:orientation.border: 0x0+0+0
+    dpx:orientation.filename: DD LEFT SCREEN 23.98_00200.dpx
+    dpx:orientation.x_center: 1.34525e-042
+    dpx:orientation.x_offset: 0
+    dpx:orientation.x_size: 1920
+    dpx:orientation.y_center: 7.56701e-043
+    dpx:orientation.y_offset: 0
+    dpx:orientation.y_size: 1080
+    dpx:television.black_gain: 1.#INF
+    dpx:television.black_level: 1.#INF
+    dpx:television.break_point: 1.#INF
+    dpx:television.field_number: 255
+    dpx:television.frame_rate: 23.976
+    dpx:television.gamma: 1.#INF
+    dpx:television.horizontal_sample_rate: 1.#INF
+    dpx:television.integration_times: 1.#INF
+    dpx:television.interlace: 255
+    dpx:television.time.code: 00:00:08:08
+    dpx:television.time_offset: 1.#INF
+    dpx:television.user.bits: ff:ff:ff:ff
+    dpx:television.vertical_sample_rate: 1.#INF
+    dpx:television.video_signal: 255
+    dpx:television.white_level: 1.#INF
+    signature: cfb0d78a85af739a40540806fa8ce27219d0c422c2a4050eebeae57cff7b3583
+    software: Shake
+  Profiles:
+    Profile-dpx: 6112 bytes
+  Artifacts:
+    filename: DD_TRAILER_SCREEN_23_98_LEFT_grd001.00200.dpx
+    verbose: true
+  Tainted: False
+  Filesize: 8.303MB
+  Number pixels: 2.074M
+  Pixels per second: 14.81MB
+  User time: 0.156u
+  Elapsed time: 0:01.139
+  Version: ImageMagick 6.8.8-0 Q16 x64 2013-12-21 http://www.imagemagick.org

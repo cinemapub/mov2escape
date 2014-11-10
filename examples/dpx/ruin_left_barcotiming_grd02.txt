@@ -1,0 +1,109 @@
+Image: ruin_left_barcotiming_grd02.02500.dpx
+  Format: DPX (SMPTE 268M-2003 (DPX 2.0))
+  Class: DirectClass
+  Geometry: 1920x1080+0+0
+  Units: Undefined
+  Type: TrueColor
+  Base type: TrueColor
+  Endianess: MSB
+  Colorspace: Log
+  Depth: 10-bit
+  Channel depth:
+    red: 10-bit
+    green: 10-bit
+    blue: 10-bit
+  Channel statistics:
+    Red:
+      min: 0 (0)
+      max: 860 (0.839689)
+      mean: 378.085 (0.369229)
+      standard deviation: 232.496 (0.22705)
+      kurtosis: -1.57167
+      skewness: -0.0578047
+    Green:
+      min: 40 (0.0390936)
+      max: 796 (0.777127)
+      mean: 432.204 (0.422081)
+      standard deviation: 239.184 (0.233582)
+      kurtosis: -1.65184
+      skewness: -0.124627
+    Blue:
+      min: 0 (0)
+      max: 644 (0.62855)
+      mean: 372.389 (0.363667)
+      standard deviation: 209.04 (0.204144)
+      kurtosis: -1.65915
+      skewness: -0.14362
+  Image statistics:
+    Overall:
+      min: 0 (0)
+      max: 860 (0.839689)
+      mean: 394.226 (0.384992)
+      standard deviation: 227.275 (0.221951)
+      kurtosis: -1.53135
+      skewness: -0.0756884
+  Rendering intent: Perceptual
+  Gamma: 0.454545
+  Chromaticity:
+    red primary: (0.64,0.33)
+    green primary: (0.3,0.6)
+    blue primary: (0.15,0.06)
+    white point: (0.3127,0.329)
+  Background color: log(255,255,255)
+  Border color: log(223,223,223)
+  Matte color: log(189,189,189)
+  Transparent color: log(0,0,0)
+  Interlace: None
+  Intensity: Undefined
+  Compose: Over
+  Page geometry: 1920x1080+0+0
+  Dispose: Undefined
+  Iterations: 0
+  Compression: Undefined
+  Orientation: TopLeft
+  Properties:
+    date:create: 2014-11-10T13:42:24+01:00
+    date:modify: 2014-11-10T13:42:24+01:00
+    document: /san19/temp/032014_mr_187502/FROM_EFILM_032014_LEFT_1920x1080/ruin_left_barcotiming_grd02/1920x1080
+    dpx:file.creator: Shake
+    dpx:file.ditto.key: 1
+    dpx:file.filename: /san19/temp/032014_mr_187502/FROM_EFILM_032014_LEFT_1920x1080/ruin_left_barcotiming_grd02/1920x1080
+    dpx:file.timestamp: 2014:03:20:17:49:27:PDT
+    dpx:file.version: V1.0
+    dpx:film.frame_position: 0
+    dpx:film.held_count: 0
+    dpx:film.sequence_extent: 0
+    dpx:image.element[0].transfer-characteristic: PrintingDensity
+    dpx:image.element[1].transfer-characteristic: Reserved
+    dpx:image.element[2].transfer-characteristic: Reserved
+    dpx:image.element[3].transfer-characteristic: Reserved
+    dpx:image.element[4].transfer-characteristic: Reserved
+    dpx:image.element[5].transfer-characteristic: Reserved
+    dpx:image.element[6].transfer-characteristic: Reserved
+    dpx:image.element[7].transfer-characteristic: Reserved
+    dpx:image.orientation: 0
+    dpx:orientation.aspect_ratio: 1000x1000
+    dpx:orientation.border: 0x0+0+0
+    dpx:orientation.x_center: 1.34525e-042
+    dpx:orientation.x_offset: 0
+    dpx:orientation.x_size: 1920
+    dpx:orientation.y_center: 7.56701e-043
+    dpx:orientation.y_offset: 0
+    dpx:orientation.y_size: 1080
+    dpx:television.frame_rate: 23.976
+    dpx:television.time.code: 00:00:22:11
+    dpx:television.user.bits: 00:00:00:00
+    signature: 4ae8a749a031a88857d3f81d65d291f2ed96e8a3019a09d4d2c491677da0492d
+    software: Shake
+  Profiles:
+    Profile-dpx: 6112 bytes
+  Artifacts:
+    filename: ruin_left_barcotiming_grd02.02500.dpx
+    verbose: true
+  Tainted: False
+  Filesize: 8.303MB
+  Number pixels: 2.074M
+  Pixels per second: 12.06MB
+  User time: 0.265u
+  Elapsed time: 0:01.171
+  Version: ImageMagick 6.8.8-0 Q16 x64 2013-12-21 http://www.imagemagick.org
