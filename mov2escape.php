@@ -6,8 +6,9 @@ $attrib="Peter Forret <p.forret@brightfish.be>";
 $moddate=date("Y-m-d",filemtime($argv[0]));
 
 // only works for Windows now
-$ffmpeg='c:\tools\ffmpeg64\ffmpeg.exe';
-$magick='c:\program files\graphicsmagick-1.3.20-q16\gm.exe';
+$ffmpeg='C:\tools\ffmpeg64\ffmpeg.exe';
+$magick='C:\Program Files\graphicsmagick-1.3.20-q16\gm.exe';
+$identify='C:\tools\identify.exe';
 $testsec=20;
 
 $dtemp="temp";
@@ -187,6 +188,7 @@ function convert_dpx($folderin,$folderout){
 	$flog="log\\cnvdpx." . basename($folderin). ".log";
 	global $ffmpeg;
 	global $magick;
+	global $identify;
 
 	if(!file_exists("$folderout\\.")){
 		trace("Create folder [$folderout]");
@@ -196,11 +198,32 @@ function convert_dpx($folderin,$folderout){
 	$filesin=listfiles($folderin);
 	trace("");
 		trace("CONVERT 2 DPX FOR $mov [" . basename($folderin) . "]","INFO");
+	$imgno=0;
 	foreach($filesin as $srcfile){
+		$imgno++;
 		$dstfile=basename($srcfile);
 		$dstfile="$folderout/".str_replace(Array(".jpg",".tif",".dpx"),"",$dstfile).".dpx";
 		if(do_if_necessary($srcfile,$dstfile)){
-			cmdline("\"$magick\" convert \"$srcfile\" -colorspace CineonLog -endian msb -set display-gamma 2.2 -depth 10 \"$dstfile\" ");			
+			// based on http://www.graphicsmagick.org/motion-picture.html
+			exec("\"$magick\" convert \"$srcfile\" -colorspace CineonLog -endian msb -depth 10 \"$dstfile\" ");			
+		}
+		if($imgno==1){
+			trace("convert \"$srcfile\" -colorspace CineonLog -endian msb -depth 10");			
+			$infolines=cmdline("\"$identify\" -verbose \"$dstfile\" ");
+			foreach($infolines as $infoline){
+				$lower=strtolower($infoline);
+				switch(true){
+				case(contains($lower,"#qnan")):
+					// nophing
+					break;;
+				case(contains($lower,"gamma")):
+				case(contains($lower,"geometry")):
+				case(contains($lower,"colorspace")):
+				case(contains($lower,"filesize")):
+				case(contains($lower,"frame_rate")):
+					printf("   * %s \r\n",trim($infoline));
+				}
+			}
 		}
 	}
 
