@@ -9,7 +9,7 @@ $moddate=date("Y-m-d",filemtime($argv[0]));
 $ffmpeg='C:\tools\ffmpeg64\ffmpeg.exe';
 $magick='C:\Program Files\graphicsmagick-1.3.20-q16\gm.exe';
 $identify='C:\tools\identify.exe';
-$testsec=20;
+$testsec=5;
 
 $dtemp="temp";
 $dout="output";
@@ -65,7 +65,8 @@ if(!isset($opts["input"])) {
 }
 $input=$opts["input"];
 
-$prefix=substr(pathinfo($input,PATHINFO_FILENAME),0,8);		// make +- sure name refers to input file - easier to distinguish
+$prefix=substr(pathinfo($input,PATHINFO_FILENAME),0,12);		// make +- sure name refers to input file - easier to distinguish
+$prefix=preg_replace("([^\w])","",$prefix);
 $prefix.="." . substr(md5($input),0,4); 					// make +- sure it's unique based on input file
 
 if(isset($opts["t"])){
@@ -139,9 +140,9 @@ $d_R1="$dout\\$prefix.R";
 $d_R2="$dout\\$prefix.R.dpx";
 $d_C="$dout\\$prefix.C";
 
-render_frames($out_l,$d_L1,"tif");
-render_frames($out_c,$d_C,"tif");
-render_frames($out_r,$d_R1,"tif");
+render_frames($out_l,$d_L1,"jpg");
+render_frames($out_c,$d_C,"jpg");
+render_frames($out_r,$d_R1,"jpg");
 
 convert_dpx($d_L1,$d_L2);
 convert_dpx($d_R1,$d_R2);
