@@ -164,12 +164,12 @@ $d_R1="$dout\\$prefix.R";
 $d_R2="$dout\\$prefix.R.dpx";
 $d_C="$dout\\$prefix.C";
 
-render_frames($out_l,$d_L2,"dpx");
+render_frames($out_l,$d_L1,"jpg");
 render_frames($out_c,$d_C,"jpg");
-render_frames($out_r,$d_R2,"dpx");
+render_frames($out_r,$d_R1,"jpg");
 
-//convert_dpx($d_L1,$d_L2);
-//convert_dpx($d_R1,$d_R2);
+convert_dpx($d_L1,$d_L2);
+convert_dpx($d_R1,$d_R2);
 
 
 function render_frames($mov,$folder,$type="dpx"){
