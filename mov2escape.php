@@ -151,7 +151,7 @@ if(do_if_necessary($ftemp,$out_r)){
 
 if(do_if_necessary($ftemp,$out_c)){
 	trace("CUT CENTER SCREEN $out_c","INFO");
-	run_ffmpeg($ftemp,$out_c,"$ffcut -vf \"crop=$cutl_w:$escp_h:$cutl_w:0,scale=2048:858\"");
+	run_ffmpeg($ftemp,$out_c,"$ffcut -vf \"crop=$cutc_w:$escp_h:$cutl_w:0,scale=2048:858\"");
 }
 
 /// ----------------------------------
