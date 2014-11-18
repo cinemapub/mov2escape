@@ -112,11 +112,11 @@ trace("ESCAPE WIDTH  : $escp_w");
 /// ----------------------------------
 // based on https://trac.ffmpeg.org/wiki/Encode/H.264
 if($escp_h == $orig_h AND $escp_w == $orig_w){
-	trace("SUPERSCOPE: already in right format","INFO");
+	trace("ULTRASCOPE 5.95: already in right format","INFO");
 	$ffparam[]="-c:v copy"; 			// almost lossless compression
 	$ffparam[]="-c:a copy";
 } else {
-	trace("SUPERSCOPE: width $orig_w => $escp_w - crop to height $escp_h","INFO");
+	trace("ULTRASCOPE 5.95: width $orig_w => $escp_w - crop to height $escp_h","INFO");
 	$ffparam[]="-vf \"scale=$escp_w:-1,crop=$escp_w:$escp_h\""; 	// rescale to full escape width / crop center
 	$ffparam[]="-c:v libx264 -preset ultrafast -crf 1"; 			// almost lossless compression
 	$ffparam[]="-c:a copy";
@@ -244,6 +244,8 @@ function convert_dpx($folderin,$folderout){
 	global $ffmpeg;
 	global $magick;
 	global $identify;
+	
+	$dpxsettings="-colorspace RGB -endian msb -depth 10 -define dpx:film.frame_rate=24 ";
 
 	if(!file_exists("$folderout\\.")){
 		trace("Create folder [$folderout]");
@@ -260,16 +262,16 @@ function convert_dpx($folderin,$folderout){
 		$dstfile="$folderout/".str_replace(Array(".jpg",".tif",".dpx"),"",$dstfile).".dpx";
 		if(do_if_necessary($srcfile,$dstfile)){
 			// based on http://www.graphicsmagick.org/motion-picture.html
-			exec("\"$magick\" convert \"$srcfile\" -colorspace CineonLog -endian msb -depth 10 \"$dstfile\" ");			
+			exec("\"$magick\" convert \"$srcfile\" $dpxsettings \"$dstfile\" ");			
 		}
 		if($imgno==1){
-			trace("convert \"$srcfile\" -colorspace CineonLog -endian msb -depth 10");			
+			trace("Settings: $dpxsettings");			
 			$infolines=cmdline("\"$identify\" -verbose \"$dstfile\" ");
 			foreach($infolines as $infoline){
 				$lower=strtolower($infoline);
 				switch(true){
 				case(contains($lower,"#qnan")):
-					// nophing
+					// nothing
 					break;;
 				case(contains($lower,"gamma")):
 				case(contains($lower,"geometry")):
