@@ -12,7 +12,7 @@ function contains($haystack,$needle){
 function trace($input,$type="DEBUG"){
 	global $debug;
 	
-	$time=date("H:m:s");
+	$time=date("H:i:s");
 	switch($type){
 	case "DEBUG":
 		// only show if in debug mode

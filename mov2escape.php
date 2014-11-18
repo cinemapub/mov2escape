@@ -7,7 +7,7 @@ $moddate=date("Y-m-d",filemtime($argv[0]));
 
 // only works for Windows now
 $ffmpeg='C:\tools\ffmpeg64\ffmpeg.exe';
-$magick='C:\Program Files\graphicsmagick-1.3.20-q16\gm.exe';
+$magick='C:\Program Files\ImageMagick-6.8.9-Q16\convert.exe';
 $identify='C:\tools\identify.exe';
 $testsec=10;
 
@@ -245,7 +245,7 @@ function convert_dpx($folderin,$folderout){
 	global $magick;
 	global $identify;
 	
-	$dpxsettings="-colorspace RGB -endian msb -depth 10 -define dpx:film.frame_rate=24 ";
+	$dpxsettings="-colorspace RGB -endian msb -depth 10 -set gamma 2.2 -define dpx:film.frame_rate=24 ";
 
 	if(!file_exists("$folderout\\.")){
 		trace("Create folder [$folderout]");
@@ -262,7 +262,8 @@ function convert_dpx($folderin,$folderout){
 		$dstfile="$folderout/".str_replace(Array(".jpg",".tif",".dpx"),"",$dstfile).".dpx";
 		if(do_if_necessary($srcfile,$dstfile)){
 			// based on http://www.graphicsmagick.org/motion-picture.html
-			exec("\"$magick\" convert \"$srcfile\" $dpxsettings \"$dstfile\" ");			
+			//          http://www.imagemagick.org/script/motion-picture.php
+			exec("\"$magick\" \"$srcfile\" $dpxsettings \"$dstfile\" ");			
 		}
 		if($imgno==1){
 			trace("Settings: $dpxsettings");			
